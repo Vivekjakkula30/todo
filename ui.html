@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Society Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+  <style>
+    .card-glow { box-shadow: 0 6px 18px rgba(8,8,30,0.08); border-radius: 12px; }
+    .carousel-hero { height: 54vh; min-height: 340px; }
+    .carousel-hero .carousel-item img { object-fit: cover; width: 100%; height: 100%; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+<!-- NAVBAR -->
+<nav class="bg-white border-b sticky top-0 z-40">
+  <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="text-2xl font-bold text-sky-600">Smart Society</div>
+    <div class="flex gap-4">
+      <button id="loginBtn" class="px-4 py-1 text-sm bg-sky-600 text-white rounded-md">Login</button>
+      <button id="logoutBtn" class="hidden px-4 py-1 text-sm bg-red-500 text-white rounded-md">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg w-96 p-6">
+    <h2 class="text-xl font-bold mb-4 text-center">Login</h2>
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm mb-1">Username</label>
+        <input type="text" id="username" class="w-full border p-2 rounded" required />
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Password</label>
+        <input type="password" id="password" class="w-full border p-2 rounded" required />
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Role</label>
+        <select id="role" class="w-full border p-2 rounded">
+          <option value="resident">Resident</option>
+          <option value="security">Security</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full bg-sky-600 text-white py-2 rounded">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN CONTENT (Homepage sections always visible) -->
+<main>
+  <!-- Carousel -->
+  <section class="container mx-auto px-4 mt-6">
+    <div id="buildingCarousel" class="carousel slide carousel-hero rounded-xl overflow-hidden card-glow" data-bs-ride="carousel">
+      <div class="carousel-inner h-full">
+        <div class="carousel-item active">
+          <img src="https://source.unsplash.com/1600x900/?building,apartment" class="d-block w-100" alt="1">
+        </div>
+        <div class="carousel-item">
+          <img src="https://source.unsplash.com/1600x900/?residential,apartment,condo" class="d-block w-100" alt="2">
+        </div>
+        <div class="carousel-item">
+          <img src="https://source.unsplash.com/1600x900/?apartment,complex" class="d-block w-100" alt="3">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#buildingCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#buildingCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- About + Stats -->
+  <section class="container mx-auto px-4 mt-10 grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 card-glow p-6 bg-white">
+      <h2 class="text-2xl font-bold">About the Society</h2>
+      <p class="mt-2 text-slate-600">
+        GreenView Residency is a smart community platform where residents can stay updated with notices, events, and visitor logs.
+      </p>
+    </div>
+    <div class="space-y-4">
+      <div class="card-glow p-6 text-center bg-white">
+        <h3>Total Members</h3>
+        <div class="text-3xl font-bold" id="totalMembers">0</div>
+      </div>
+      <div class="card-glow p-6 text-center bg-white">
+        <h3>Total Visitors (Today)</h3>
+        <div class="text-3xl font-bold" id="totalVisitors">0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Events + Notices -->
+  <section class="container mx-auto px-4 mt-10 grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 card-glow p-6 bg-white">
+      <h2 class="text-xl font-bold">Events</h2>
+      <ul class="mt-4 list-disc ml-6">
+        <li>Community Yoga — Sunday 8 AM</li>
+        <li>Bake Sale — Saturday 11 AM</li>
+      </ul>
+    </div>
+    <div class="card-glow p-6 bg-white">
+      <h2 class="text-xl font-bold">Notices</h2>
+      <ul class="mt-4 list-disc ml-6">
+        <li>Water Shutdown — 25th Sep</li>
+        <li>Fire Drill — 1st Oct</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ROLE DASHBOARDS (hidden until login) -->
+  <section id="dashboards" class="container mx-auto px-4 mt-12 hidden">
+    <!-- Admin -->
+    <div id="adminDashboard" class="hidden card-glow p-6 bg-white">
+      <h2 class="text-2xl font-bold mb-4">Admin Dashboard</h2>
+      <ul class="list-disc ml-6">
+        <li>Manage Residents</li>
+        <li>Approve Visitors</li>
+        <li>Post Notices</li>
+        <li>Create Events</li>
+      </ul>
+    </div>
+
+    <!-- Resident -->
+    <div id="residentDashboard" class="hidden card-glow p-6 bg-white">
+      <h2 class="text-2xl font-bold mb-4">Resident Dashboard</h2>
+      <ul class="list-disc ml-6">
+        <li>View Notices</li>
+        <li>Pay Maintenance</li>
+        <li>Register Visitor</li>
+        <li>Book Hall</li>
+      </ul>
+    </div>
+
+    <!-- Security -->
+    <div id="securityDashboard" class="hidden card-glow p-6 bg-white">
+      <h2 class="text-2xl font-bold mb-4">Security Dashboard</h2>
+      <ul class="list-disc ml-6">
+        <li>Log Visitor Entry</li>
+        <li>View Today’s Visitors</li>
+        <li>Emergency Alerts</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="mt-12 border-t">
+  <div class="container mx-auto px-4 py-6 flex justify-between">
+    <p class="text-sm text-slate-500">© 2025 Smart Society</p>
+    <div class="flex gap-4">
+      <i class="fab fa-whatsapp"></i>
+      <i class="fab fa-twitter"></i>
+      <i class="fab fa-instagram"></i>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Elements
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const loginModal = document.getElementById("loginModal");
+  const loginForm = document.getElementById("loginForm");
+
+  const dashboards = document.getElementById("dashboards");
+  const adminDashboard = document.getElementById("adminDashboard");
+  const residentDashboard = document.getElementById("residentDashboard");
+  const securityDashboard = document.getElementById("securityDashboard");
+
+  // Login
+  loginBtn.addEventListener("click", () => loginModal.classList.remove("hidden"));
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const role = document.getElementById("role").value;
+    localStorage.setItem("userRole", role);
+    loginModal.classList.add("hidden");
+    loginBtn.classList.add("hidden");
+    logoutBtn.classList.remove("hidden");
+    dashboards.classList.remove("hidden");
+
+    adminDashboard.classList.add("hidden");
+    residentDashboard.classList.add("hidden");
+    securityDashboard.classList.add("hidden");
+    if (role === "admin") adminDashboard.classList.remove("hidden");
+    if (role === "resident") residentDashboard.classList.remove("hidden");
+    if (role === "security") securityDashboard.classList.remove("hidden");
+  });
+
+  // Logout
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("userRole");
+    dashboards.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
+    loginBtn.classList.remove("hidden");
+  });
+
+  // Keep login after refresh
+  window.onload = () => {
+    const role = localStorage.getItem("userRole");
+    if (role) {
+      loginBtn.classList.add("hidden");
+      logoutBtn.classList.remove("hidden");
+      dashboards.classList.remove("hidden");
+      if (role === "admin") adminDashboard.classList.remove("hidden");
+      if (role === "resident") residentDashboard.classList.remove("hidden");
+      if (role === "security") securityDashboard.classList.remove("hidden");
+    }
+
+    // Animate counts
+    function animate(el, target) {
+      let val = 0;
+      const step = target / 40;
+      const timer = setInterval(() => {
+        val += step;
+        if (val >= target) { val = target; clearInterval(timer); }
+        el.textContent = Math.floor(val);
+      }, 40);
+    }
+    animate(document.getElementById("totalMembers"), 420);
+    animate(document.getElementById("totalVisitors"), 37);
+  };
+</script>
+</body>
+</html>
